@@ -4,8 +4,6 @@
 #include <QObject>
 #include <QTcpServer>
 #include <QTcpSocket>
-#include <QThread>
-#include <QSemaphore>
 #include <QVector>
 #include <QStack>
 
@@ -27,13 +25,17 @@ public:
 
 public slots:
     void HandlerNewConnection();
+    void readSocket();
 
 private:
     unsigned int port = -1;
-    bool _should_work = 0;
     QTcpServer *tcp_server;
     QStack<QString> client_list;
-    QVector<QThread> processing_queue;
+
+    // for test reason
+    const int test_ID = 15;
+    const QString test_name = "Valera";
+    const QString test_address = "Oslo";
 };
 
 #endif // TCPSERVERHANDLER_H

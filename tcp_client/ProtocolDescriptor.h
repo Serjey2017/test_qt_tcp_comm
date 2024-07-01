@@ -13,29 +13,13 @@ enum KEY_VALUES{
 };
 
 static void parseMSG(QString msg, int rez = 0) {
+    qDebug() << "parse msg here";
     qInfo() << msg;
-    int key = msg.toInt();
-    rez = key;
-    switch(key) {
-    case get_ID: {
-        break;
-    }
-
-    case get_name:{
-        break;
-    }
-
-    case get_address: {
-        break;
-    }
-    default:
-        qDebug() << "this thing not supported yet";
-        break;
-    }
-
 }
 
+const QString custom_header = "0F";
 const int header_size = 2;
 
+/// msg: header(id, name, address) + body(payload)
 
 #endif // PROTOCOLDESCRIPTOR_H

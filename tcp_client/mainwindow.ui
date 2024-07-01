@@ -183,10 +183,10 @@
     <item row="1" column="0">
      <widget class="QLineEdit" name="lineEdit">
       <property name="inputMask">
-       <string>xxx.xxx.xxx.xxx</string>
+       <string>xxx.xxx.xxx.xxx:xxxx</string>
       </property>
       <property name="text">
-       <string>127.0.0.1.</string>
+       <string>127.000.000.001:5000</string>
       </property>
      </widget>
     </item>
