@@ -20,7 +20,7 @@ public:
     void sendMessage(QTcpSocket* socket);
     void readMessage(QTcpSocket* socket);
 
-    void newMessage(QString &msg);
+    void newMessage(QPair<QString, QTcpSocket*> pair);
     void MessageToSent(QString &msg);
 
 public slots:

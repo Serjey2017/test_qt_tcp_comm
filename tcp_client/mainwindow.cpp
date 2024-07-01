@@ -91,29 +91,44 @@ void MainWindow::on_pb_getaddress_clicked()
 void MainWindow::readSocket()
 {
     QByteArray buffer;
-
     QDataStream socketStream(socket);
+    QPair<QString, int> pair;
 
     socketStream.startTransaction();
     socketStream >> buffer;
 
     if(!socketStream.commitTransaction())
     {
-        QString message = QString("%1 :: Waiting for more data to come..").arg(socket->socketDescriptor());
-        emit newMessage(message);
+        pair.first = QString("%1 :: Waiting for more data to come..").arg(socket->socketDescriptor());
+        pair.second = -1;
+        emit newMessage(pair);
         return;
     }
 
     QString header = buffer.mid(0, header_size);
     buffer = buffer.mid(header_size);
 
-    QString message = QString("%1 :: %2").arg(socket->socketDescriptor()).arg(QString::fromStdString(buffer.toStdString()));
-    emit newMessage(message);
+    pair.first = buffer;
+    pair.second = header.toInt();
+
+    emit newMessage(pair);
 }
 
-void MainWindow::displayMessage(const QString& str)
+void MainWindow::displayMessage(const QPair<QString, int> pair)
 {
-    ui->pb_getID->setText(str);
+    switch (pair.second) {
+    case set_ID:
+        ui->text_ID->setText(pair.first);
+        break;
+    case set_name:
+        ui->text_name->setText(pair.first);
+        break;
+    case set_address:
+        ui->text_address->setText(pair.first);
+        break;
+    default:
+        break;
+    }
 }
 
 void MainWindow::displayError() {

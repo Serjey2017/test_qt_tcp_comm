@@ -16,7 +16,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 signals:
-    void newMessage(QString);
+    void newMessage(QPair<QString, int>);
 
 private slots:
     void on_lineEdit_editingFinished();
@@ -24,7 +24,7 @@ private slots:
     void on_pb_getname_clicked();
     void on_pb_getaddress_clicked();
     void readSocket();
-    void displayMessage(const QString& str);
+    void displayMessage(const QPair<QString , int> pair);
     void displayError();
 
 

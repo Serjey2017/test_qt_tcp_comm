@@ -57,21 +57,6 @@ static void sendMsg(QTcpSocket *socket, QString request, const int header_size) 
 
 void TCPServerHandler::sendMessage(QTcpSocket* socket)
 {
-//    if(socket)
-//    {
-//        if(socket->isOpen())
-//        {
-//            QString str = "test string to sent";
-
-//            QDataStream socketStream(socket);
-//            QByteArray byteArray = str.toUtf8();
-//            socketStream << byteArray;
-//        }
-//        else
-//            qCritical("QTCPServer: failed to open socket");
-//    }
-//    else
-//        qCritical("QTCPServer: No connection");
     sendMsg(socket, QString::number(KEY_VALUES::set_name), header_size);
 }
 
@@ -79,6 +64,7 @@ void TCPServerHandler::sendMessage(QTcpSocket* socket)
 void TCPServerHandler::readMessage(QTcpSocket* socket)
 {
     QByteArray buffer;
+    QPair<QString, QTcpSocket*> pair;
     QDataStream socketStream(socket);
 
     socketStream.startTransaction();
@@ -87,31 +73,42 @@ void TCPServerHandler::readMessage(QTcpSocket* socket)
 
     if(!socketStream.commitTransaction())
     {
-        QString message = QString("%1 :: Waiting for more data to come..").arg(socket->socketDescriptor());
-        emit newMessage(message);
+        pair.first = QString("%1 :: Waiting for more data to come..").arg(socket->socketDescriptor());
+        pair.second = socket;
+        emit newMessage(pair);
         return;
     }
 
     QString header = buffer.mid(0, header_size);
     buffer = buffer.mid(header_size);
 
-    //QString message = QString("%1 :: %2").arg(socket->socketDescriptor()).arg(QString::fromStdString(buffer.toStdString()));
-    QString message = buffer;
+    pair.first = buffer;
+    pair.second = socket;
 
-//    QPair<QString, QTcpSocket> pair;
-//    pair.first = buffer;
-
-//    emit newMessage(pair); //message);
-    emit newMessage(message);
+    emit newMessage(pair);
 }
 
-void TCPServerHandler::newMessage(QString &msg)
-//void TCPServerHandler::newMessage(QPair<QString, QTcpSocket> pair)
+void TCPServerHandler::newMessage(QPair<QString, QTcpSocket*> pair)
 {
-    int rez = -1;
-    parseMSG(msg, rez);
-//    parseMSG(pair.first, rez);
-//    if(rez == get_ID) {
-//        sendMsg(&pair.second, QString::number(KEY_VALUES::set_name), header_size);
-//    }
+    // ugly conditioning
+    int key = pair.first.toInt();
+    switch(key) {
+    case get_ID: {
+        sendMsg(pair.second, QString::number(KEY_VALUES::set_ID) + QString::number(test_ID), header_size);
+        break;
+    }
+
+    case get_name:{
+        sendMsg(pair.second, QString::number(KEY_VALUES::set_name) + test_name, header_size);
+        break;
+    }
+
+    case get_address: {
+        sendMsg(pair.second, QString::number(KEY_VALUES::set_name) + test_address, header_size);
+        break;
+    }
+    default:
+        qDebug() << "hold on, this thing not supported yet";
+        break;
+    }
 }
