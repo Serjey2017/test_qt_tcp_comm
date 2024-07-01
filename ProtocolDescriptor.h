@@ -12,13 +12,10 @@ enum KEY_VALUES{
     set_address,
 };
 
-static void parseMSG(QString msg, int rez = 0) {
-    qInfo() << msg;
 
-
-}
-
+const QString custom_header = "0F";
 const int header_size = 2;
 
+/// msg: header(id, name, address) + body(payload)
 
 #endif // PROTOCOLDESCRIPTOR_H

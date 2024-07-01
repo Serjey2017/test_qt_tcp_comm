@@ -7,8 +7,7 @@
 #include <QVector>
 #include <QStack>
 
-#include "ProtocolDescriptor.h"
-
+#include "../ProtocolDescriptor.h"
 
 class TCPServerHandler : public QObject
 {
@@ -31,11 +30,6 @@ private:
     unsigned int port = -1;
     QTcpServer *tcp_server;
     QStack<QString> client_list;
-
-    // for test reason
-    const int test_ID = 15;
-    const QString test_name = "Valera";
-    const QString test_address = "Oslo";
 };
 
 #endif // TCPSERVERHANDLER_H

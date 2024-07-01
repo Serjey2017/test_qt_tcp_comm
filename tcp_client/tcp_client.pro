@@ -13,8 +13,8 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
-    ProtocolDescriptor.h \
     mainwindow.h
+    ../ProtocolDescriptor.h
 
 FORMS += \
     mainwindow.ui

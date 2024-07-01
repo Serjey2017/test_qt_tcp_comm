@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "ProtocolDescriptor.h"
+#include "../ProtocolDescriptor.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -51,21 +51,19 @@ static void sendMsg(QTcpSocket *socket, QString request, const int header_size) 
                 QDataStream socketStream(socket);
 
                 QByteArray header;
-                header.prepend(QString("fileType:message,msgSize:%1;").arg(request.size()).toUtf8());
+                header.prepend(QString("%1%2;").arg(custom_header.toUtf8()).arg(request.size()).toUtf8());
                 header.resize(header_size);
 
                 QByteArray byteArray = request.toUtf8();
                 byteArray.prepend(header);
 
                 socketStream << byteArray;
-
             }
             else
                 qCritical("TCPClient: failed to open socket");
         }
         else
             qCritical("TCPClient: no connection");
-
 }
 
 void MainWindow::on_pb_getID_clicked()
@@ -108,13 +106,13 @@ void MainWindow::readSocket()
     QString header = buffer.mid(0, header_size);
     buffer = buffer.mid(header_size);
 
-    pair.first = buffer;
-    pair.second = header.toInt();
+    pair.first = buffer.mid(1);
+    pair.second = buffer.mid(0,1).toInt();
 
     emit newMessage(pair);
 }
 
-void MainWindow::displayMessage(const QPair<QString, int> pair)
+void MainWindow::displayMessage(QPair<QString, int> pair)
 {
     switch (pair.second) {
     case set_ID:

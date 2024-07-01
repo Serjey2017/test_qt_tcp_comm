@@ -1,6 +1,6 @@
 #include "tcpserverhandler.h"
-//#include <QDebug>
 #include <QPair>
+#include "../TestData.h"
 
 TCPServerHandler::TCPServerHandler(int port, QObject *parent)
 {
@@ -37,7 +37,7 @@ static void sendMsg(QTcpSocket *socket, QString request, const int header_size) 
                 QDataStream socketStream(socket);
 
                 QByteArray header;
-                header.prepend(QString("fileType:message,msgSize:%1;").arg(request.size()).toUtf8());
+                header.prepend(QString("%1%2;").arg(custom_header.toUtf8()).arg(request.size()).toUtf8());
                 header.resize(header_size);
 
                 QByteArray byteArray = request.toUtf8();
@@ -94,17 +94,20 @@ void TCPServerHandler::newMessage(QPair<QString, QTcpSocket*> pair)
     int key = pair.first.toInt();
     switch(key) {
     case get_ID: {
-        sendMsg(pair.second, QString::number(KEY_VALUES::set_ID) + QString::number(test_ID), header_size);
+        QString test_ID = QString::number( QRandomGenerator::global()->bounded(256));
+        sendMsg(pair.second, QString::number(KEY_VALUES::set_ID) + test_ID, header_size);
         break;
     }
 
     case get_name:{
+        QString test_name = NAME_VALUES.at(QRandomGenerator::global()->bounded(NAME_VALUES.size()));
         sendMsg(pair.second, QString::number(KEY_VALUES::set_name) + test_name, header_size);
         break;
     }
 
     case get_address: {
-        sendMsg(pair.second, QString::number(KEY_VALUES::set_name) + test_address, header_size);
+        QString test_address = ADDRESS_VALUES.at(QRandomGenerator::global()->bounded(ADDRESS_VALUES.size()));
+        sendMsg(pair.second, QString::number(KEY_VALUES::set_address) + test_address, header_size);
         break;
     }
     default:

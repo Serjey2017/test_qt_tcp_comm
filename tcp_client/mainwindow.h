@@ -24,10 +24,8 @@ private slots:
     void on_pb_getname_clicked();
     void on_pb_getaddress_clicked();
     void readSocket();
-    void displayMessage(const QPair<QString , int> pair);
+    void displayMessage(QPair<QString , int> pair);
     void displayError();
-
-
 
 private:
     Ui::MainWindow *ui;
