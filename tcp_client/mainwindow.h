@@ -15,6 +15,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_pb_getID_clicked();
+
+    void on_lineEdit_editingFinished();
+
 private:
     Ui::MainWindow *ui;
 };
